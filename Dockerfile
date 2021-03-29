@@ -1,6 +1,7 @@
 # FROM ubuntu:18.04 AS openWrtBuilder
 
-FROM arm32v7/ubuntu:18.04 AS openWrtBuilder
+# FROM arm32v7/ubuntu:18.04 AS openWrtBuilder
+FROM ubuntu:18.04 AS openWrtBuilder
 
 SHELL ["/bin/bash", "-c"]
 
