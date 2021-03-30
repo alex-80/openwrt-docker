@@ -2,17 +2,34 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-18.04
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag pi4/openwrt
+      - uses: actions/checkout@v2
+
+      - name: Check space usage
+        if: (!cancelled())
+        run: df -hT
+
+      - name: Build the Docker image
+        run: |
+          echo -e "$(nproc) thread compile"
+          docker build . --file Dockerfile --tag pi4/openwrt \
+          --build-arg MAKE_JOBS=$(nproc) \
+          --build-arg OPENWRT_VERBOSE=
+
+      - name: Save Docker image
+        run: |
+          docker save pi4/openwrt | gzip > firmware.tar.gz
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: firmware
+          path: firmware.tar.gz
