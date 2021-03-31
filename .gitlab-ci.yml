@@ -1,0 +1,33 @@
+image: docker:19.03.12
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+
+services:
+  - docker:19.03.12-dind
+
+before_script:
+  - docker info
+
+stages:
+  - build_image
+  - save_image
+
+build_image:
+  stage: build_image
+  script:
+    - |
+      echo -e "$(nproc) thread compile"
+      docker build . --file Dockerfile --tag pi4/openwrt \
+      --build-arg MAKE_JOBS=$(nproc) \
+      --build-arg OPENWRT_VERBOSE=
+
+save_image:
+  stage: save_image
+  script:
+    - docker save pi4/openwrt | gzip > firmware.tar.gz
+  artifacts:
+    paths:
+      - firmware.tar.gz
+    untracked: false
+    expire_in: 7 days
