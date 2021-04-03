@@ -20,7 +20,9 @@ RUN apt update \
     && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" \
     && nvm install 8.0.0 \
     && git clone git://github.com/openwrt/openwrt.git openwrt \
-    && git clone https://github.com/jerrykuku/luci-theme-argon.git openwrt/package/luci-theme-argon
+    && git clone https://github.com/jerrykuku/luci-theme-argon.git openwrt/package/luci-theme-argon \
+    && git clone https://github.com/vernesong/OpenClash.git openwrt/package/luci-app-openclash \
+    && git clone https://github.com/rufengsuixing/luci-app-adguardhome.git openwrt/package/luci-app-adguardhome
 
 COPY config/defconfig ./openwrt
 
