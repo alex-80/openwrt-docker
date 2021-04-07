@@ -1,12 +1,11 @@
 FROM ubuntu:18.04 AS openWrtBuilder
 
-# FROM arm32v7/ubuntu:18.04 AS openWrtBuilder
-
 ARG FIRMWARE_PATH=bin/targets/bcm27xx/bcm2709/openwrt-bcm27xx-bcm2709-rpi-2-rootfs.tar.gz
 ARG MAKE_JOBS=4
 ARG OPENWRT_VERBOSE=s
 
 SHELL ["/bin/bash", "-c"]
+
 
 RUN apt update \
     && apt -y upgrade \
@@ -26,6 +25,9 @@ RUN apt update \
 
 COPY config/defconfig ./openwrt
 
+# build openwrt
+# unzip openwrt product
+# download AdGuardHome binary file
 RUN cd openwrt \
     && export PATH="$HOME/.nvm/versions/node/v8.0.0/bin":$PATH \
     && ./scripts/feeds update -a \
@@ -36,7 +38,12 @@ RUN cd openwrt \
     && make download -j4 \
     && make -j ${MAKE_JOBS} V=${OPENWRT_VERBOSE} \
     && mkdir product \
-    && tar -xzf ${FIRMWARE_PATH} --directory=product
+    && tar -xzf ${FIRMWARE_PATH} --directory=product \
+    && wget https://github.com/AdguardTeam/AdGuardHome/releases/download/v0.105.2/AdGuardHome_linux_armv7.tar.gz -O adguardhome.tar.gz \ 
+    && mkdir -p product/usr/bin/AdGuardHome \
+    && tar -xzf adguardhome.tar.gz -C product/usr/bin/AdGuardHome/ ./AdGuardHome/AdGuardHome --strip-components=2 \
+    && chmod +x product/usr/bin/AdGuardHome/AdGuardHome \ 
+    && cp product/usr/share/AdGuardHome/AdGuardHome_template.yaml product/etc/AdGuardHome.yaml
 
 FROM scratch
 
