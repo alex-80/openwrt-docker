@@ -71,6 +71,7 @@ CONFIG_PACKAGE_curl=y
 # CONFIG_PACKAGE_cypress-nvram-43430-sdio-rpi-3b is not set
 # CONFIG_PACKAGE_cypress-nvram-43455-sdio-rpi-3b-plus is not set
 CONFIG_PACKAGE_dkjson=y
+# CONFIG_PACKAGE_dnsmasq is not set
 CONFIG_PACKAGE_dnsmasq-full=y
 CONFIG_PACKAGE_dnsmasq_full_auth=y
 CONFIG_PACKAGE_dnsmasq_full_conntrack=y
